@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="ViceCodeTestTask.Views.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ViceCodeTestTask"
+             xmlns:views="clr-namespace:ViceCodeTestTask.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="720" d:DesignWidth="1024">
+    <Grid Background="White">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="300"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <!--Header-->
+            <TextBlock Text="Log in to ViceCodeTestTask" HorizontalAlignment="Center" FontWeight="Medium"
+                   FontSize="24" Margin="0,0,0,20" Grid.Row="0" Grid.ColumnSpan="3" />
+            <!--Email-->
+            <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
+                <TextBlock Text="Email" />
+                <TextBox x:Name="EmailTextBox" Validation.ErrorTemplate="{StaticResource ValidationTemplate}" >
+                    <TextBox.Text>
+                        <Binding Path="Email" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                            <Binding.ValidationRules>
+                                <local:ProperEmailAddressRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </StackPanel>
+            <!--Password-->
+            <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1">
+                <TextBlock Text="Password" />
+                <TextBox x:Name="PasswordTextBox" Validation.ErrorTemplate="{StaticResource ValidationTemplate}">
+                    <TextBox.Text>
+                        <Binding Path="Password" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                            <Binding.ValidationRules>
+                                <local:ProperPasswordRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </StackPanel>
+            <!--Trouble logging in?-->
+            <TextBlock HorizontalAlignment="Center" Grid.Row="3" Grid.Column="1"> 
+                <Hyperlink Command="{Binding ToRecoveryCommand}">
+                    Trouble logging in? 
+                </Hyperlink>
+            </TextBlock>
+            <!--Submit button-->
+            <Button Content="Let me in!" Width="120" Command="{Binding LogInCommand}" 
+                Grid.Row="4" Grid.Column="1" Height="40" Margin="0,20,0,10" >
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="IsEnabled" Value="False"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=(Validation.HasError), ElementName=EmailTextBox}" Value="False">
+                                <Setter Property="IsEnabled" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=Text, ElementName=PasswordTextBox}" Value="">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <!--Sign up-->
+            <TextBlock HorizontalAlignment="Center" Grid.Row="5" Grid.ColumnSpan="3">
+                Don't have a profire? 
+                <Hyperlink Command="{Binding ToSignUpCommand}">
+                    Sing up!
+                </Hyperlink>
+            </TextBlock>
+        </Grid>
+    </Grid>
+</UserControl>

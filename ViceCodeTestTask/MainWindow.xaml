@@ -4,9 +4,35 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ViceCodeTestTask"
+        xmlns:views="clr-namespace:ViceCodeTestTask.Views"
+        xmlns:viewmodels="clr-namespace:ViceCodeTestTask.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="ViceCodeTestTask" d:DesignHeight="730" d:DesignWidth="1034" WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <viewmodels:ApplicationViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}">
+            <views:LoginView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:MainViewModel}">
+            <views:MainView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:UserProfileViewModel}">
+            <views:UserProfileView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:SignUpViewModel}">
+            <views:SignUpView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:UserSettingsViewModel}">
+            <views:UserSettingsView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:RecoveryViewModel}">
+            <views:RecoveryView/>
+        </DataTemplate>
+    </Window.Resources>
+
+    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}"/>
 </Window>
