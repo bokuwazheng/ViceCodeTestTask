@@ -12,12 +12,6 @@ namespace ViceCodeTestTask.ViewModels
         public MainViewModel(ApplicationViewModel applicationViewModel)
         {
             _applicationViewModel = applicationViewModel;
-            base.PropertyChanged += (s, e) =>
-            {
-                RaisePropertyChanged(nameof(Username));
-                RaisePropertyChanged(nameof(Email));
-                RaisePropertyChanged(nameof(SignedUpSince));
-            };
         }
 
         public DelegateCommand ToUserSettingsCommand => new DelegateCommand(() =>
