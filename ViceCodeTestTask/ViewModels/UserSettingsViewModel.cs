@@ -93,6 +93,8 @@ namespace ViceCodeTestTask.ViewModels
                 if (reassurance == DialogResult.Cancel) return;
                 // Delete.
                 await AuthProvider.DeleteUserAsync(_authLink.FirebaseToken, _cts.Token).ConfigureAwait(false);
+                // Log out.
+                _applicationViewModel.ToLogin();
             }
             catch (FirebaseAuthException ex)
             {
