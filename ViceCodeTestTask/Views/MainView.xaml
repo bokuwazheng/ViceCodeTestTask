@@ -8,19 +8,46 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="31*"/>
-            <RowDefinition Height="419*"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
-                    Grid.Row="0">
-            <Button Content="Settings" Width="80" Margin="2" Command="{Binding ToUserSettingsCommand}"/>
-            <Button Content="Log out" Width="80" Margin="2" Command="{Binding ToLogInCommand}"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Settings" Width="100" Margin="2" Command="{Binding ToUserSettingsCommand}">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button Content="Log out" Width="100" Margin="2" Command="{Binding ToLogInCommand}">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                    </Style>
+                </Button.Style>
+            </Button>
         </StackPanel>
-        <StackPanel Grid.Row="1" HorizontalAlignment="Center">
-            <TextBlock Text="Account info: " />
-            <TextBlock Text="{Binding Username, FallbackValue=USERNAME}" />
-            <TextBlock Text="{Binding Email, FallbackValue=EMAIL}" />
-            <TextBlock Text="{Binding SingedUpSince, FallbackValue=SINCE}" />
+
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Account info: " FontWeight="Medium" FontSize="20"/>
+            <TextBlock >
+                <Run Text="User name: "/>
+                <Run Text="{Binding Username, Mode=OneWay, FallbackValue=USERNAME}"/>
+            </TextBlock>
+            <TextBlock >
+                <Run Text="Email: "/>
+                <Run Text="{Binding Email, Mode=OneWay, FallbackValue=EMAIL}"/>
+            </TextBlock>
+            <TextBlock  >
+                <Run Text="User since: "/>
+                <Run Text="{Binding SignedUpSince, Mode=OneWay, FallbackValue=SINCE}" />
+            </TextBlock>
+            <TextBlock >
+                <Run Text="Verification status:"/>
+                <Run Text="{Binding Verified, Mode=OneWay, FallbackValue=VERIFIED}"/>
+            </TextBlock>
         </StackPanel>
 
     </Grid>

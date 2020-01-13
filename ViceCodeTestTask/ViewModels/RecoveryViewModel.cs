@@ -1,27 +1,14 @@
 ﻿using Prism.Commands;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Firebase.Auth;
 using System.Threading;
 using System.Windows.Forms;
-using Newtonsoft.Json.Linq;
-using System.Text.Json;
 using Newtonsoft.Json;
-using Settings = ViceCodeTestTask.Properties.Settings;
-using Prism.Mvvm;
 
 namespace ViceCodeTestTask.ViewModels
 {
     public class RecoveryViewModel : BaseViewModel
     {
-        private ApplicationViewModel _applicationViewModel;
-
-        private IFirebaseAuthProvider AuthProvider => ApplicationViewModel.AuthProvider;
-        private CancellationTokenSource cts;
-
         public RecoveryViewModel(ApplicationViewModel applicationViewModel)
         {
             _applicationViewModel = applicationViewModel;
@@ -29,12 +16,12 @@ namespace ViceCodeTestTask.ViewModels
 
         public DelegateCommand<string> SendInstructionsCommand => new DelegateCommand<string>(async (email) =>
         {
-            cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(180.0));
+            _cts = new CancellationTokenSource();
+            _cts.CancelAfter(TimeSpan.FromSeconds(180.0));
 
             try
             {
-                await AuthProvider.SendPasswordResetEmailAsync(email, cts.Token).ConfigureAwait(false);
+                await AuthProvider.SendPasswordResetEmailAsync(email, _cts.Token).ConfigureAwait(false);
                 MessageBox.Show("Please check you email.");
             }
             catch (FirebaseAuthException ex)
@@ -53,8 +40,13 @@ namespace ViceCodeTestTask.ViewModels
             }
             finally
             {
-                cts.Dispose();
+                _cts.Dispose();
             }
+        });
+
+        public DelegateCommand ToLogInCommand => new DelegateCommand(() =>
+        {
+            _applicationViewModel.ToLogin();
         });
     }
 }

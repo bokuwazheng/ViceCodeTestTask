@@ -1,75 +1,64 @@
 ﻿using Prism.Commands;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Firebase.Auth;
 using System.Threading;
 using System.Windows.Forms;
-using Newtonsoft.Json.Linq;
-using System.Text.Json;
 using Newtonsoft.Json;
-using Settings = ViceCodeTestTask.Properties.Settings;
+using System.Security;
 
 namespace ViceCodeTestTask.ViewModels
 {
     public class UserSettingsViewModel : BaseViewModel
     {
-        private ApplicationViewModel _applicationViewModel;
-        private string _newPassword = "";
-        private string _newConfirm = "";
+        private SecureString _deletionPassword;
 
-        private IFirebaseAuthProvider AuthProvider => ApplicationViewModel.AuthProvider;
-        private CancellationTokenSource cts;
-
-        public string Email { get; set; }
-        public string OldPassword { get; set; }
-        public string NewPassword
+        public SecureString CurrentPassword { get; set; }
+        public SecureString DeletionPassword
         {
-            get => _newPassword;
-            set
-            {
-                if (value != _newPassword) _newPassword = value;
-                RaisePropertyChanged(nameof(NewPassword));
-                RaisePropertyChanged(nameof(PasswordsMatch));
-            }
+            get => _deletionPassword;
+            set { SetProperty(ref _deletionPassword, value); RaisePropertyChanged(nameof(DeletionEnabled)); }
         }
-        public string NewConfirm
-        {
-            get => _newConfirm;
-            set
-            {
-                if (value != _newConfirm) _newConfirm = value;
-                RaisePropertyChanged(nameof(NewConfirm));
-                RaisePropertyChanged(nameof(PasswordsMatch));
-            }
-        }
-        public string DeletionPassword { get; set; }
-        // Utilized by BooleanToVisibilityConverter to show matching error.
-        public bool PasswordsMatch => !NewPassword.Equals(NewConfirm);
+        public bool DeletionEnabled => DeletionPassword?.Length >= 6;
 
         public UserSettingsViewModel(ApplicationViewModel applicationViewModel)
         {
             _applicationViewModel = applicationViewModel;
         }
 
+        public DelegateCommand ToMainCommand => new DelegateCommand(() =>
+        {
+            _applicationViewModel.ToMain();
+        });
+
+        public DelegateCommand ToRecoveryCommand => new DelegateCommand(() =>
+        {
+            _applicationViewModel.ToRecovery();
+        });
+
         public DelegateCommand ChangePasswodCommand => new DelegateCommand(async() =>
         {
-            cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(180.0));
-            var token = _applicationViewModel.AuthLink.FirebaseToken;
+            _cts = new CancellationTokenSource();
+            _cts.CancelAfter(TimeSpan.FromSeconds(180.0));
 
             try
             {
-                await AuthProvider.ChangeUserPasswordAsync(token, NewPassword, cts.Token);
+                // Confirm password.
+                await AuthProvider.SignInWithEmailAndPasswordAsync(_authLink.User.Email,
+                    SecureStringToString(CurrentPassword),
+                    _cts.Token).ConfigureAwait(false);
+                // Change password.
+                await AuthProvider.ChangeUserPasswordAsync(_authLink.FirebaseToken, 
+                    SecureStringToString(Password2), 
+                    _cts.Token).ConfigureAwait(false);
+                // Notify user.
+                MessageBox.Show("Success! Your password has been changed!");
             }
             catch (FirebaseAuthException ex)
             {
                 var caption = "Failed to change password.";
                 var error = JsonConvert.DeserializeObject<FirebaseResponseRoot>(ex.ResponseData).Error;
                 MessageBox.Show(
-                    "Please make sure that you have entered your login and password correctly.\n" +
+                    "Please make sure that you have entered your password correctly.\n" +
                     "\nError code: " + error.code +
                     "\nError message: " + error.message,
                     caption);
@@ -80,13 +69,8 @@ namespace ViceCodeTestTask.ViewModels
             }
             finally
             {
-                cts.Dispose();
+                _cts.Dispose();
             }
-        });
-
-        public DelegateCommand ToMainCommand => new DelegateCommand(() =>
-        {
-            _applicationViewModel.ToMain();
         });
 
         public DelegateCommand DeleteAccountCommand => new DelegateCommand(async() =>
@@ -95,21 +79,20 @@ namespace ViceCodeTestTask.ViewModels
             "It would be a shame to see you go!\n" +
             "\nTo delete your account, please click OK button.";
 
-            cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(180.0));
-            var authLink = _applicationViewModel.AuthLink;
+            _cts = new CancellationTokenSource();
+            _cts.CancelAfter(TimeSpan.FromSeconds(180.0));
 
             try
             {
                 // Confirm password.
-                await AuthProvider.SignInWithEmailAndPasswordAsync(authLink.User.Email,
-                    DeletionPassword,
-                    cts.Token).ConfigureAwait(false);
+                await AuthProvider.SignInWithEmailAndPasswordAsync(_authLink.User.Email,
+                    SecureStringToString(DeletionPassword),
+                    _cts.Token).ConfigureAwait(false);
                 // Reassure.
                 var reassurance = MessageBox.Show(message, "Are you sure?", MessageBoxButtons.OKCancel);
                 if (reassurance == DialogResult.Cancel) return;
                 // Delete.
-                await AuthProvider.DeleteUserAsync(authLink.FirebaseToken, cts.Token).ConfigureAwait(false);
+                await AuthProvider.DeleteUserAsync(_authLink.FirebaseToken, _cts.Token).ConfigureAwait(false);
             }
             catch (FirebaseAuthException ex)
             {
@@ -127,10 +110,8 @@ namespace ViceCodeTestTask.ViewModels
             }
             finally
             {
-                cts.Dispose();
+                _cts.Dispose();
             }
         });
-
-
     }
 }

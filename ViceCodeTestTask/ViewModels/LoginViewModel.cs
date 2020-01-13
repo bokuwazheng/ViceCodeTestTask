@@ -1,28 +1,14 @@
 ﻿using Prism.Commands;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Firebase.Auth;
 using System.Threading;
 using System.Windows.Forms;
-using Newtonsoft.Json.Linq;
-using System.Text.Json;
 using Newtonsoft.Json;
-using Settings = ViceCodeTestTask.Properties.Settings;
 
 namespace ViceCodeTestTask.ViewModels
 {
     public class LoginViewModel : BaseViewModel
     {
-        private IFirebaseAuthProvider AuthProvider => ApplicationViewModel.AuthProvider;
-        private CancellationTokenSource cts;
-        private ApplicationViewModel _applicationViewModel;
-        public string Email { get; set; }
-        public string Password { get; set; }
-
-
         public LoginViewModel(ApplicationViewModel applicationViewModel)
         {
             _applicationViewModel = applicationViewModel;
@@ -40,15 +26,15 @@ namespace ViceCodeTestTask.ViewModels
 
         public DelegateCommand LogInCommand => new DelegateCommand(async() =>
         {
-            cts = new CancellationTokenSource();
-            cts.CancelAfter(TimeSpan.FromSeconds(180.0));
+            _cts = new CancellationTokenSource();
+            _cts.CancelAfter(TimeSpan.FromSeconds(180.0));
 
             try
             {
-                var auth = await AuthProvider.SignInWithEmailAndPasswordAsync(Email, Password).ConfigureAwait(false);
-                _applicationViewModel.AuthLink = auth;
+                _authLink = await AuthProvider.SignInWithEmailAndPasswordAsync(Email, SecureStringToString(Password1)).
+                ConfigureAwait(false);
 
-                if (auth != null) _applicationViewModel.ToMain();
+                if (_authLink != null) _applicationViewModel.ToMain();
             }
             catch (FirebaseAuthException ex)
             {
@@ -66,16 +52,8 @@ namespace ViceCodeTestTask.ViewModels
             }
             finally
             {
-                cts.Dispose();
+                _cts.Dispose();
             }
         });
-
-        public DelegateCommand AuthorizeCommand => new DelegateCommand(() =>
-        {
-
-        });
-
-
-
     }
 }

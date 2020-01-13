@@ -14,9 +14,9 @@
                 </TextBlock>
             </StackPanel>
         </ControlTemplate>
-        
+
         <!--Converters-->
-        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         
         <!--Main brushes-->
         <SolidColorBrush x:Key="Gray" Color="Gray"/>
@@ -52,11 +52,40 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
+        <!--PasswordBox Style Flat-->
+        <Style x:Key="{x:Type PasswordBox}" TargetType="PasswordBox">
+            <Setter Property="Foreground" Value="Gray"/>
+            <Setter Property="Background" Value="{StaticResource WhiteSmoke}"/>
+            <Setter Property="Padding" Value="6,2,6,2"/>
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type PasswordBox}">
+                        <Border x:Name="Border" BorderBrush="{StaticResource WhiteSmoke}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" CornerRadius="5">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" TargetName="Border" Value="{StaticResource Blue}"/>
+                                <Setter Property="BorderThickness" TargetName="Border" Value="2"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Margin" Value="0"/>
+                            </Trigger>
+                            <Trigger Property="Validation.HasError" Value="True">
+                                <Setter Property="BorderBrush" TargetName="Border" Value="Red"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!--Caption-->
         <Style x:Key="{x:Type TextBlock}" TargetType="TextBlock">
             <Setter Property="FontSize" Value="18"/>
-            <!--<Setter Property="Foreground" Value="{StaticResource Gray}"/>-->
         </Style>
 
         <!--Button style-->
@@ -84,5 +113,53 @@
             </Style.Triggers>
         </Style>
         
+        <!--Button style Icon-->
+        <Style x:Key="Icon" TargetType="Button" >
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding Background}" CornerRadius="18">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.8"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.45"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!--Button style Caption-->
+        <Style x:Key="Caption" TargetType="Button" >
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding Background}" CornerRadius="18">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.8"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.45"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Application.Resources>
 </Application>

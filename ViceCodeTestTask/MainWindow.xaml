@@ -7,7 +7,7 @@
         xmlns:views="clr-namespace:ViceCodeTestTask.Views"
         xmlns:viewmodels="clr-namespace:ViceCodeTestTask.ViewModels"
         mc:Ignorable="d"
-        Title="ViceCodeTestTask" d:DesignHeight="730" d:DesignWidth="1034" WindowStartupLocation="CenterScreen">
+        Title="ViceCodeTestTask" d:DesignHeight="770" d:DesignWidth="1034" WindowStartupLocation="CenterScreen">
 
     <Window.DataContext>
         <viewmodels:ApplicationViewModel/>
@@ -20,9 +20,6 @@
         <DataTemplate DataType="{x:Type viewmodels:MainViewModel}">
             <views:MainView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewmodels:UserProfileViewModel}">
-            <views:UserProfileView/>
-        </DataTemplate>
         <DataTemplate DataType="{x:Type viewmodels:SignUpViewModel}">
             <views:SignUpView/>
         </DataTemplate>
@@ -33,6 +30,31 @@
             <views:RecoveryView/>
         </DataTemplate>
     </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="ViceCodeTestTask" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <!--<Button Content="Settings" Height="40" Width="120" Command="{Binding ToSettings}">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button Content="Profile" Height="40" Width="120" Command="{Binding ToProfileCommand}">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="Black"/>
+                    </Style>
+                </Button.Style>
+            </Button>-->
+        </StackPanel>
+        <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"/>
+    </Grid>
 
-    <ContentControl Content="{Binding CurrentViewModel, UpdateSourceTrigger=PropertyChanged}"/>
 </Window>

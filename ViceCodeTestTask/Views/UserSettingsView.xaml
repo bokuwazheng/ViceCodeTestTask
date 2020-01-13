@@ -4,108 +4,108 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ViceCodeTestTask"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1024">
     <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="4*"/>
-            <RowDefinition Height="41*"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button Content="Back to Main" Width="120" Margin="2" HorizontalAlignment="Left"
-                Command="{Binding ToMainCommand}" Grid.Row="0" />
-        <StackPanel Grid.Row="1" VerticalAlignment="Center">
-            <TextBlock Text="Change password" HorizontalAlignment="Center"/>
-            <TextBlock Text="Current password" HorizontalAlignment="Center" />
-            <TextBox x:Name="OldPasswordTextBox" 
-                     Width="240" Validation.ErrorTemplate="{StaticResource ValidationTemplate}" >
-                <TextBox.Text>
-                    <Binding Path="OldPassword" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
-                        <Binding.ValidationRules>
-                            <local:ProperPasswordRule/>
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
-            <TextBlock HorizontalAlignment="Center"> 
-                <Hyperlink Command="{Binding RecoverAccountCommand}">
+        <Button Content="Back to main page" Width="200" Margin="2" Command="{Binding ToMainCommand}"
+                HorizontalAlignment="Right">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="70"/>
+            </Grid.RowDefinitions>
+            <!--Header-->
+            <TextBlock Text="Change password" HorizontalAlignment="Center" Grid.Row="0"
+                       FontWeight="Medium" FontSize="24" Grid.Column="1" Margin="0,20,0,10"/>
+            <!--Current password-->
+            <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
+                <TextBlock Text="Current password" />
+                <PasswordBox >
+                    <i:Interaction.Behaviors>
+                        <local:PasswordBehavior Password="{Binding Path=CurrentPassword}"/>
+                    </i:Interaction.Behaviors>
+                </PasswordBox>
+            </StackPanel>
+            <!--Forgot your password?-->
+            <TextBlock HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" > 
+                <Hyperlink Command="{Binding ToRecoveryCommand}">
                     Forgot your password?  
                 </Hyperlink>
             </TextBlock>
-            <TextBlock Text=" New password" HorizontalAlignment="Center" />
-            <TextBox x:Name="NewPasswordTextBox" Width="240" 
-                     Validation.ErrorTemplate="{StaticResource ValidationTemplate}">
-                <TextBox.Text>
-                    <Binding Path="NewPassword" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
-                        <Binding.ValidationRules>
-                            <local:ProperPasswordRule/>
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
-            <TextBlock Text="Confirm new password" HorizontalAlignment="Center" />
-            <TextBox x:Name="NewConfirmTextBox" Width="240" 
-                     Validation.ErrorTemplate="{StaticResource ValidationTemplate}">
-                <TextBox.Text>
-                    <Binding Path="NewConfirm" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
-                        <Binding.ValidationRules>
-                            <local:ProperPasswordRule/>
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
-            <TextBlock Foreground="#FFE20944" FontSize="12" Margin="5,0,0,0" HorizontalAlignment="Center"
-                           Visibility="{Binding Path=PasswordsMatch, Converter={StaticResource BoolToVis}}">
-                    <Run Text="&#xEB90;" FontFamily="Segoe MDL2 Assets" FontSize="10" />
-                    <Run Text="Passwords don't match." />
-            </TextBlock>
-            <Button Content="Change password" Width="120" Command="{Binding SignUpCommand}" >
-                <Button.Style>
-                    <Style TargetType="{x:Type Button}">
-                        <Setter Property="IsEnabled" Value="True"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=(Validation.HasError), ElementName=EmailTextBox}" Value="True">
-                                <Setter Property="IsEnabled" Value="False"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path=Text, ElementName=PasswordTextBox}" Value="">
-                                <Setter Property="IsEnabled" Value="False"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
-            <TextBlock Text="Delete accout" HorizontalAlignment="Center" />
-            <TextBlock Text="Confirm account deletion" HorizontalAlignment="Center" />
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock Text="Password: " Margin="0,0,5,0"/>
-                <TextBox x:Name="DeletionTextBox" HorizontalAlignment="Center" Width="180" 
-                         Validation.ErrorTemplate="{StaticResource ValidationTemplate}">
-                    <TextBox.Text>
-                        <Binding Path="DeletionPassword" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
-                            <Binding.ValidationRules>
-                                <local:ProperPasswordRule/>
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
+            <!--New password-->
+            <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1">
+                <TextBlock Text=" New password" />
+                <PasswordBox >
+                    <i:Interaction.Behaviors>
+                        <local:PasswordBehavior Password="{Binding Path=Password1}"/>
+                    </i:Interaction.Behaviors>
+                </PasswordBox>
             </StackPanel>
-            <Button HorizontalAlignment="Center" Command="{Binding DeleteAccountCommand}"
-                    Content="Delete my account" Width="140" >
+            <!--Confirm new password-->
+            <StackPanel Orientation="Vertical" Grid.Row="4" Grid.Column="1">
+                <TextBlock Text="Confirm new password" />
+                <PasswordBox >
+                    <i:Interaction.Behaviors>
+                        <local:PasswordBehavior Password="{Binding Path=Password2}"/>
+                    </i:Interaction.Behaviors>
+                </PasswordBox>
+            </StackPanel>
+            <!--Submit button-->
+            <Button Content="Change password" Command="{Binding ChangePasswodCommand}" 
+                    Grid.Row="5" Grid.Column="1" Height="40" Width="200" >
                 <Button.Style>
-                    <Style TargetType="{x:Type Button}">
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="IsEnabled" Value="False"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=(Validation.HasError), ElementName=DeletionTextBox}" Value="False">
+                            <DataTrigger Binding="{Binding IsEnabled}" Value="True">
                                 <Setter Property="IsEnabled" Value="True"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path=Text, ElementName=DeletionTextBox}" Value="">
-                                <Setter Property="IsEnabled" Value="False"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Button.Style>
             </Button>
-
-        </StackPanel>
-
+            <!--Header-->
+            <TextBlock Text="Delete accout" HorizontalAlignment="Center" Grid.Row="6" Grid.Column="1"
+                       FontWeight="Medium" FontSize="24" Margin="0,20,0,10"/>
+            <!--Account deletion-->
+            <StackPanel Orientation="Vertical" Grid.Row="7" Grid.Column="1">
+                <TextBlock Text="Password: " />
+                <PasswordBox >
+                    <i:Interaction.Behaviors>
+                        <local:PasswordBehavior Password="{Binding Path=DeletionPassword}"/>
+                    </i:Interaction.Behaviors>
+                </PasswordBox>
+            </StackPanel>
+            <!--Submit deletion button-->
+            <Button HorizontalAlignment="Center" Command="{Binding DeleteAccountCommand}"
+                    Content="Delete my account" Width="200" Grid.Row="8" Grid.Column="1" Height="40"
+                    IsEnabled="{Binding DeletionEnabled}"/>
+        </Grid>
     </Grid>
 </UserControl>

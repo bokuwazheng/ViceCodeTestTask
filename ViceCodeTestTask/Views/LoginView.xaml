@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ViceCodeTestTask"
              xmlns:views="clr-namespace:ViceCodeTestTask.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="720" d:DesignWidth="1024">
     <Grid Background="White">
@@ -42,15 +43,11 @@
             <!--Password-->
             <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1">
                 <TextBlock Text="Password" />
-                <TextBox x:Name="PasswordTextBox" Validation.ErrorTemplate="{StaticResource ValidationTemplate}">
-                    <TextBox.Text>
-                        <Binding Path="Password" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
-                            <Binding.ValidationRules>
-                                <local:ProperPasswordRule/>
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
+                <PasswordBox>
+                    <i:Interaction.Behaviors>
+                        <local:PasswordBehavior Password="{Binding Path=Password1}"/>
+                    </i:Interaction.Behaviors>
+                </PasswordBox>
             </StackPanel>
             <!--Trouble logging in?-->
             <TextBlock HorizontalAlignment="Center" Grid.Row="3" Grid.Column="1"> 
@@ -67,9 +64,6 @@
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Path=(Validation.HasError), ElementName=EmailTextBox}" Value="False">
                                 <Setter Property="IsEnabled" Value="True"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path=Text, ElementName=PasswordTextBox}" Value="">
-                                <Setter Property="IsEnabled" Value="False"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>

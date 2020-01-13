@@ -25,10 +25,8 @@ namespace ViceCodeTestTask
             {
                 return new ValidationResult(true, null);
             }
-            else
-            {
-                return new ValidationResult(false, "That doesn't look like a real email address. Try again?");
-            }
+
+            return new ValidationResult(false, "That doesn't look like a real email address. Try again?");
         }
     }
 }

@@ -1,23 +1,18 @@
 ﻿using Prism.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ViceCodeTestTask.ViewModels
 {
     class MainViewModel : BaseViewModel
     {
-        private ApplicationViewModel _applicationViewModel;
-        public string Username => _applicationViewModel.AuthLink?.User.DisplayName;
-        public string Email => _applicationViewModel.AuthLink?.User.Email;
-        public string SignedUpSince => _applicationViewModel.AuthLink?.Created.Date.ToShortDateString();
+        public new string Username => _authLink?.User.DisplayName;
+        public new string Email => _authLink?.User.Email;
+        public string SignedUpSince => _authLink?.Created.Date.ToShortDateString();
+        public string Verified => (bool)_authLink?.User.IsEmailVerified ? "Verified" : "Not verified";
 
         public MainViewModel(ApplicationViewModel applicationViewModel)
         {
             _applicationViewModel = applicationViewModel;
-            _applicationViewModel.PropertyChanged += (s, e) =>
+            base.PropertyChanged += (s, e) =>
             {
                 RaisePropertyChanged(nameof(Username));
                 RaisePropertyChanged(nameof(Email));
